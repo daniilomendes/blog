@@ -64,3 +64,18 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteUser  = async (req, res, next) => {
+  if (req.user.id !== req.params.userId) {
+    return next(
+      errorHandler(403, "Você não tem permissão para deletar este usuário.")
+    );
+  }
+
+  try {
+    await User.findByIdAndDelete(req.params.userId)
+    res.status(200).json("Usuário deleletado!")
+  } catch (error) {
+    next(error)
+  }
+}
