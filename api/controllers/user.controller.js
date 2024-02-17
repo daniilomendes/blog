@@ -65,7 +65,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-export const deleteUser  = async (req, res, next) => {
+export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return next(
       errorHandler(403, "Você não tem permissão para deletar este usuário.")
@@ -73,9 +73,20 @@ export const deleteUser  = async (req, res, next) => {
   }
 
   try {
-    await User.findByIdAndDelete(req.params.userId)
-    res.status(200).json("Usuário deleletado!")
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("Usuário deleletado!");
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
+export const signout = (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token")
+      .status(200)
+      .json("O usuário foi desconectado!");
+  } catch (error) {
+    next(error);
+  }
+};
