@@ -8,10 +8,10 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../firebase.js";
+import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
@@ -46,10 +46,10 @@ export default function CreatePost() {
           setImageUploadProgress(null);
         },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData({ ...formData, image: downloadUrl });
+            setFormData({ ...formData, image: downloadURL });
           });
         }
       );
@@ -63,10 +63,10 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/post/create', {
-        method: 'POST',
+      const res = await fetch("/api/post/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -81,15 +81,13 @@ export default function CreatePost() {
         navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      setPublishError('Something went wrong');
+      setPublishError("Algo deu errado.");
     }
   };
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">
-        Criar Postagem
-      </h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Criar Postagem</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
@@ -109,8 +107,8 @@ export default function CreatePost() {
           >
             <option value="uncategorized">Selecione a categoria</option>
             <option value="javascript">JavaScript</option>
-            <option value="reactjs">ReactJs</option>
-            <option value="nextjs">NextJs</option>
+            <option value="reactjs">React.js</option>
+            <option value="nextjs">Next.js</option>
           </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
@@ -154,15 +152,18 @@ export default function CreatePost() {
           placeholder="Digite algo..."
           className="h-72 mb-12"
           required
-          onChange={(value) => setFormData({ ...formData, content: value })}
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
           Publicar
         </Button>
-
-        {
-          publishError && <Alert className="mt-5" color="failure">{publishError}</Alert>
-        }
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
       </form>
     </div>
   );
